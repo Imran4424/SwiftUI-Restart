@@ -9,6 +9,8 @@
 + AppStorage
 + ZStack
 + VStack
++ HStack
++ Creating full screen background programatically
 
 
 
@@ -28,7 +30,13 @@
 
 
 # VStack
-+ ZStack is a type of Stack type container in SwiftUI 
++ VStack is a type of Stack type container in SwiftUI 
 + We can arrange the view vertically
 + Vertical means views are arranged in y axis manner
-+ if we think of a matrix vertical means views are arranged in row manner
++ if we think of a matrix, vertical means views are arranged in row manner
+
+# HStack
++ HStack is a type of Stack type container in SwiftUI 
++ We can arrange the view horizontally
++ Horizontal means views are arranged in x axis manner
++ if we think of a matrix, horizontal means views are arranged in col manner
