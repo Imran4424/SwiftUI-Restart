@@ -11,6 +11,10 @@ struct OnboardingView: View {
     // MARK: - Property
     @AppStorage("onboarding") var isOnboardingViewActive = true
     
+    @State private var butoonWidth: Double = UIScreen.main.bounds.width - 80
+    @State private var buttonOffset: CGFloat = 0
+    @State private var isAnimating: Bool = false
+    
     var body: some View {
         ZStack {
             // creating full screen background
@@ -36,23 +40,20 @@ struct OnboardingView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 10)
                 }
+                .opacity(isAnimating ? 1 : 0)
+                .offset(y: isAnimating ? 0 : -40)
+                .animation(.easeOut(duration: 1), value: isAnimating)
                 //: Header
                 
                 // MARK: - Center
                 ZStack {
-                    ZStack {
-                        Circle()
-                            .stroke(.white.opacity(0.2), lineWidth: 40)
-                            .frame(width: 260, height: 260, alignment: .center)
-                        
-                        Circle()
-                            .stroke(.white.opacity(0.2), lineWidth: 80)
-                            .frame(width: 260, height: 260, alignment: .center)
-                    } //: ZStack
+                    CircleGroupView(shapeColor: .white, shapeOpacity: 0.2)
                     
                     Image("character-1")
                         .resizable()
                         .scaledToFit()
+                        .opacity(isAnimating ? 1: 0)
+                        .animation(.easeOut(duration: 0.5), value: isAnimating)
                 } //: ZStack
                 //: Center
                 
@@ -80,7 +81,7 @@ struct OnboardingView: View {
                     HStack {
                         Capsule()
                             .fill(Color("ColorRed"))
-                            .frame(width: 80)
+                            .frame(width: buttonOffset + 80)
                         Spacer()
                     } //: HStack
                     
@@ -97,17 +98,39 @@ struct OnboardingView: View {
                         } //: ZStack
                         .foregroundColor(.white)
                         .frame(width: 80, height: 80, alignment: .center)
-                        .onTapGesture {
-                            isOnboardingViewActive = false
-                        }
+                        .offset(x: buttonOffset)
+                        .gesture(
+                            DragGesture()
+                                .onChanged { gesture in
+                                    if gesture.translation.width > 0 && buttonOffset <= butoonWidth - 80 {
+                                        buttonOffset = gesture.translation.width
+                                    }
+                                }
+                                .onEnded{ _ in
+                                    withAnimation(Animation.easeOut(duration: 0.5)) {
+                                        if buttonOffset > butoonWidth / 1.3 {
+                                            buttonOffset = butoonWidth - 80
+                                            isOnboardingViewActive = false
+                                        } else {
+                                            buttonOffset = 0
+                                        }
+                                    }
+                                }
+                        )
                         Spacer()
                     } //: HStack
                 }
-                .frame(height: 80, alignment: .center)
+                .frame(width: butoonWidth, height: 80, alignment: .center)
                 .padding()
+                .opacity(isAnimating ? 1 : 0)
+                .offset(y: isAnimating ? 0: 40)
+                .animation(.easeOut(duration: 1), value: isAnimating)
                 //: Footer
             } //: VStack
         } //: ZStack
+        .onAppear {
+            isAnimating = true
+        }
     }
 }
 

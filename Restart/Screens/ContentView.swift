@@ -11,7 +11,7 @@ struct ContentView: View {
     // MARK: - Property
     @AppStorage("onboarding") var isOnboardingViewActive = true
     
-    var body: some View {
+    var body: some View { 
         // Z stack
         ZStack {
             if isOnboardingViewActive {
